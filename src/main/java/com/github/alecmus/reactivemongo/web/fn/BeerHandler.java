@@ -14,6 +14,11 @@ import reactor.core.publisher.Mono;
 public class BeerHandler {
     private final BeerService beerService;
 
+    public Mono<ServerResponse> deleteBeerById(ServerRequest request) {
+        return beerService.deleteBeerById(request.pathVariable("beerId"))
+                .then(ServerResponse.noContent().build());
+    }
+
     public Mono<ServerResponse> pathBeerById(ServerRequest request) {
         return request.bodyToMono(BeerDTO.class)
                 .map(beerDTO -> beerService
