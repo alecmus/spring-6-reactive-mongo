@@ -14,9 +14,16 @@ import reactor.core.publisher.Mono;
 public class BeerHandler {
     private final BeerService beerService;
 
+    public Mono<ServerResponse> pathBeerById(ServerRequest request) {
+        return request.bodyToMono(BeerDTO.class)
+                .map(beerDTO -> beerService
+                        .patchBeer(request.pathVariable("beerId"), beerDTO))
+                .flatMap(savedDto -> ServerResponse.noContent().build());
+    }
+
     public Mono<ServerResponse> updateBeerById(ServerRequest request) {
         return request.bodyToMono(BeerDTO.class)
-                .flatMap(beerDTO -> beerService
+                .map(beerDTO -> beerService
                         .updateBeer(request.pathVariable("beerId"), beerDTO))
                 .flatMap(savedDto -> ServerResponse.noContent().build());
     }
